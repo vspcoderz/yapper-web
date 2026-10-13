@@ -38,6 +38,9 @@ export const metadata: Metadata = {
     "Yapper is a free chat app for communities. Servers, channels, DMs and voice. No paywalls, no paid tiers.",
   applicationName: "Yapper",
   keywords: ["chat", "discord alternative", "free chat app", "community", "yapper"],
+  // NOTE: no `images` here on purpose. The file convention in
+  // app/opengraph-image.tsx generates the 1200x630 banner; setting images
+  // manually would override it and fall back to the square logo.
   openGraph: {
     type: "website",
     url: SITE_URL,
@@ -45,13 +48,11 @@ export const metadata: Metadata = {
     title: "Yapper | chat for people who talk",
     description:
       "Servers, channels, DMs and voice. Free, and staying that way.",
-    images: [{ url: "/yapper-tile.svg", width: 1254, height: 1254 }],
   },
   twitter: {
     card: "summary_large_image",
     title: "Yapper | chat for people who talk",
     description: "Servers, channels, DMs and voice. Free, and staying that way.",
-    images: ["/yapper-tile.svg"],
   },
   robots: { index: true, follow: true },
 };
