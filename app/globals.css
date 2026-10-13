@@ -1,26 +1,277 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
+/* ============================================================
+   Yapper design system
+
+   Background : primary colour #fc6a39 (public/yapper-tile.svg)
+   Surfaces   : near-black panels — the app's own dark look
+   Text       : white
+   Display    : Funnel Display (variable)
+   ============================================================ */
+
+@theme {
+  /* Primary colour is the page background */
+  --color-brand: #fc6a39;
+  --color-brand-deep: #d94d15;
+  --color-brand-light: #ff8a5c;
+  --color-brand-wash: rgb(255 255 255 / 0.16);
+  --color-brand-wash-strong: rgb(255 255 255 / 0.28);
+
+  /* Dark surfaces on the orange field */
+  --color-canvas: #fc6a39;
+  --color-surface: #100f11;
+  --color-card: #17161a;
+  --color-card-hover: #201e23;
+
+  /* Text — white, everywhere */
+  --color-fg: #ffffff;
+  --color-muted: rgb(255 255 255 / 0.74);
+  --color-faint: rgb(255 255 255 / 0.52);
+
+  /* Lines read as lighter on orange, lighter still on dark */
+  --color-line: rgb(255 255 255 / 0.2);
+  --color-line-strong: rgb(255 255 255 / 0.34);
+
+  --font-sans: var(--font-poppins), ui-sans-serif, system-ui, sans-serif;
+  --font-display: var(--font-funnel-display), var(--font-poppins), sans-serif;
+  --font-mono: var(--font-geist-mono), ui-monospace, monospace;
+
+  --radius-sm: 0.5rem;
+  --radius-md: 0.75rem;
+  --radius-lg: 1rem;
+  --radius-xl: 1.5rem;
+  --radius-2xl: 2rem;
+
+  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
+/* ============================================================
+   Base
+   ============================================================ */
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+html {
+  /* Next 16 no longer overrides scroll-behavior on navigation. */
+  scroll-behavior: smooth;
+  -webkit-text-size-adjust: 100%;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  /* Primary colour as the background. */
+  background: var(--color-brand);
+  color: var(--color-fg);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+h1,
+h2,
+h3,
+.font-display {
+  font-family: var(--font-display);
+  font-weight: 700;
+  letter-spacing: -0.028em;
+}
+
+::selection {
+  background: #fff;
+  color: var(--color-brand);
+}
+
+:target {
+  scroll-margin-top: 5.5rem;
+}
+
+* {
+  scrollbar-color: rgb(255 255 255 / 0.28) transparent;
+}
+*::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+*::-webkit-scrollbar-thumb {
+  background: rgb(255 255 255 / 0.28);
+  border-radius: 99px;
+}
+*::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* ============================================================
+   Focus — dark ring with a light halo so it reads on
+   both the orange field and the dark panels.
+   ============================================================ */
+
+:focus-visible {
+  outline: 2px solid #0a0a0b;
+  outline-offset: 2px;
+  box-shadow: 0 0 0 5px rgb(255 255 255 / 0.45);
+  border-radius: 4px;
+}
+
+/* ============================================================
+   Keyframes
+   ============================================================ */
+
+@keyframes yapper-drift {
+  0%,
+  100% {
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+  33% {
+    transform: translate3d(4%, -6%, 0) scale(1.08);
+  }
+  66% {
+    transform: translate3d(-5%, 4%, 0) scale(0.95);
+  }
+}
+
+@keyframes yapper-float {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+@keyframes yapper-pulse-ring {
+  0% {
+    box-shadow: 0 0 0 0 rgb(255 255 255 / 0.65);
+  }
+  70% {
+    box-shadow: 0 0 0 12px rgb(255 255 255 / 0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgb(255 255 255 / 0);
+  }
+}
+
+@keyframes yapper-marquee {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+@keyframes yapper-shimmer {
+  from {
+    background-position: 200% 0;
+  }
+  to {
+    background-position: -200% 0;
+  }
+}
+
+@keyframes yapper-glow {
+  0%,
+  100% {
+    opacity: 0.5;
+  }
+  50% {
+    opacity: 0.85;
+  }
+}
+
+.anim-drift {
+  animation: yapper-drift 24s var(--ease-out-expo) infinite;
+}
+.anim-float {
+  animation: yapper-float 7s ease-in-out infinite;
+}
+.anim-pulse-ring {
+  animation: yapper-pulse-ring 2.4s ease-out infinite;
+}
+.anim-marquee {
+  animation: yapper-marquee 38s linear infinite;
+}
+.anim-glow {
+  animation: yapper-glow 7s ease-in-out infinite;
+}
+
+/* ============================================================
+   Reveal
+   ============================================================ */
+
+.reveal {
+  opacity: 0;
+  transform: translateY(22px);
+  transition:
+    opacity 0.75s var(--ease-out-expo),
+    transform 0.75s var(--ease-out-expo);
+  transition-delay: var(--reveal-delay, 0ms);
+  will-change: opacity, transform;
+}
+
+.reveal[data-visible="true"] {
+  opacity: 1;
+  transform: none;
+  will-change: auto;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .reveal {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* ============================================================
+   Utilities
+   ============================================================ */
+
+/* White shimmer — the highlight on the orange field. */
+.shimmer-text {
+  background: linear-gradient(100deg, #ffffff 20%, #ffe3d6 40%, #ffffff 60%);
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  animation: yapper-shimmer 6s linear infinite;
+}
+
+/* Dark button sitting on orange. */
+.btn-dark {
+  background: #100f11;
+  color: #fff;
+  transition: background-color 0.25s ease;
+}
+.btn-dark:hover {
+  background: #2a262b;
+}
+
+.card-hover {
+  transition:
+    background-color 0.3s ease,
+    border-color 0.3s ease,
+    transform 0.3s ease;
+}
+.card-hover:hover {
+  background: var(--color-card-hover);
+  border-color: rgb(255 255 255 / 0.34);
+  transform: translateY(-2px);
+}
+
+.hide-scrollbar {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+.hide-scrollbar::-webkit-scrollbar {
+  display: none;
 }
